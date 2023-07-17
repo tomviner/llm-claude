@@ -1,0 +1,9 @@
+[project]
+name = "llm-claude"
+version = "0.1.0"
+dependencies = [
+    "httpx"
+]
+
+[project.entry-points.llm]
+claude = "llm_claude"

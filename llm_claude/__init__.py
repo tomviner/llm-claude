@@ -1,8 +1,8 @@
-import llm
-import httpx
 import click
+import httpx
+import llm
 
-from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from .vendored_anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 
 
 @llm.hookimpl

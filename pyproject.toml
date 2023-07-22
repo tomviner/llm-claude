@@ -1,9 +1,33 @@
 [project]
 name = "llm-claude"
-version = "0.1.0"
-dependencies = [
-    "httpx"
+version = "0.2.0"
+
+description = "LLM plugin for Anthropic's Claude"
+readme = "README.md"
+authors = [{name = "Tom Viner"}]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
 ]
+
+dependencies = [
+    "llm",
+    # vendored anthropic:
+    "httpx >=0.23.0, <1",
+    "pydantic",
+    "typing-extensions >=4.1.1, <5",
+    "anyio >=3.5.0, <4",
+    "distro >=1.7.0, <2",
+    "tokenizers >=0.13.0",
+]
+
+requires-python = ">3.7"
+
+[project.optional-dependencies]
+test = ["pytest", "click"]
+
+[project.urls]
+Homepage = "https://github.com/tomviner/llm-claude"
 
 [project.entry-points.llm]
 claude = "llm_claude"

@@ -5,7 +5,7 @@
 [![Tests](https://github.com/tomviner/llm-claude/workflows/Test/badge.svg)](https://github.com/tomviner/llm-claude/actions?query=workflow%3ATest)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/tomviner/llm-claude/blob/main/LICENSE)
 
-Plugin for [LLM](https://llm.datasette.io/) adding support for Google's ClAUde 2 model.
+Plugin for [LLM](https://llm.datasette.io/) adding support for Anthropic's Claude model.
 
 ## Installation
 
@@ -28,10 +28,21 @@ Enter key: <paste key here>
 
 ## Usage
 
-This plugin adds models called `claude` and `claude-instant`. You can execute it like this:
+This plugin adds models called `claude` and `claude-instant`.
+
+Anthropic [describe them as](https://docs.anthropic.com/claude/reference/selecting-a-model):
+
+> two families of models, both of which support 100,000 token context windows:
+
+> **Claude Instant**: low-latency, high throughput
+> **Claude**: superior performance on tasks that require complex reasoning
+
+You can execute them like this:
 
 ```bash
-llm -m claude "Ten great names for a pet pelican"
+llm -m claude-instant "Ten great names for a new space station"
+
+llm -m claude "Compare and contrast the leadership styles of Abraham Lincoln and Boris Johnson."
 ```
 
 ## Development

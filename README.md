@@ -33,7 +33,6 @@ This plugin adds models called `claude` and `claude-instant`.
 Anthropic [describes them as](https://docs.anthropic.com/claude/reference/selecting-a-model):
 
 > two families of models, both of which support 100,000 token context windows:
-
 > - **Claude Instant**: low-latency, high throughput
 > - **Claude**: superior performance on tasks that require complex reasoning
 

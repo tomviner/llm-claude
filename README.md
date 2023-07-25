@@ -46,6 +46,19 @@ llm -m claude-instant "Ten great names for a new space station"
 llm -m claude "Compare and contrast the leadership styles of Abraham Lincoln and Boris Johnson."
 ```
 
+## Options
+
+- `max_tokens_to_sample`, default 10_000: The maximum number of tokens to generate before stopping
+
+Use like this:
+```bash
+llm -m claude -o max_tokens_to_sample 20 "Sing me the alphabet"
+ Here is the alphabet song:
+
+A B C D E F G
+H I J
+```
+
 ## Development
 
 To set up this plugin locally, first checkout the code. Then create a new virtual environment:

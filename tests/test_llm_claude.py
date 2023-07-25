@@ -18,19 +18,66 @@ def test_claude_response(mock_anthropic):
     mock_anthropic.return_value.completions.create.return_value.__iter__.return_value = [
         mock_response
     ]
-    prompt = Prompt("hello", "")
+    prompt = Prompt("hello", "", options=Claude.Options())
     model = Claude("claude-2")
     model.key = "key"
     items = list(model.response(prompt))
 
     mock_anthropic.return_value.completions.create.assert_called_with(
         model="claude-2",
-        max_tokens_to_sample=300,
+        max_tokens_to_sample=10_000,
         prompt="\n\nHuman: hello\n\nAssistant:",
         stream=True,
     )
 
     assert items == ["hello"]
+
+
+@pytest.mark.parametrize("max_tokens_to_sample", (1, 500_000, 1_000_000))
+@patch("llm_claude.Anthropic")
+def test_with_max_tokens_to_sample(mock_anthropic, max_tokens_to_sample):
+    mock_response = MagicMock()
+    mock_response.completion = "hello"
+    mock_anthropic.return_value.completions.create.return_value.__iter__.return_value = [
+        mock_response
+    ]
+    prompt = Prompt(
+        "hello", "", options=Claude.Options(max_tokens_to_sample=max_tokens_to_sample)
+    )
+    model = Claude("claude-2")
+    model.key = "key"
+    items = list(model.response(prompt))
+
+    mock_anthropic.return_value.completions.create.assert_called_with(
+        model="claude-2",
+        max_tokens_to_sample=max_tokens_to_sample,
+        prompt="\n\nHuman: hello\n\nAssistant:",
+        stream=True,
+    )
+
+    assert items == ["hello"]
+
+
+@pytest.mark.parametrize("max_tokens_to_sample", (0, 1_000_001))
+@patch("llm_claude.Anthropic")
+def test_invalid_max_tokens_to_sample(mock_anthropic, max_tokens_to_sample):
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        [
+            "two dog emoji",
+            "-m",
+            "claude",
+            "-o",
+            "max_tokens_to_sample",
+            max_tokens_to_sample,
+        ],
+    )
+    assert result.exit_code == 1
+    assert (
+        result.output
+        == "Error: max_tokens_to_sample\n  Value error, max_tokens_to_sample must be in range 1-1,000,000\n"
+    )
 
 
 @patch.dict(os.environ, {"ANTHROPIC_API_KEY": "X"})

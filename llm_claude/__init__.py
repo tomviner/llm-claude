@@ -1,6 +1,8 @@
+from typing import Optional
+
 import click
-import httpx
 import llm
+from pydantic import Field, field_validator
 
 from .vendored_anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 
@@ -19,6 +21,18 @@ class Claude(llm.Model):
     needs_key = "claude"
     key_env_var = "ANTHROPIC_API_KEY"
     can_stream = True
+
+    class Options(llm.Options):
+        max_tokens_to_sample: Optional[int] = Field(
+            description="The maximum number of tokens to generate before stopping",
+            default=10_000,
+        )
+
+        @field_validator("max_tokens_to_sample")
+        def validate_length(cls, max_tokens_to_sample):
+            if not (0 < max_tokens_to_sample <= 1_000_000):
+                raise ValueError("max_tokens_to_sample must be in range 1-1,000,000")
+            return max_tokens_to_sample
 
     def __init__(self, model_id):
         self.model_id = model_id
@@ -40,7 +54,7 @@ class Claude(llm.Model):
 
         completion = anthropic.completions.create(
             model=self.model_id,
-            max_tokens_to_sample=300,
+            max_tokens_to_sample=prompt.options.max_tokens_to_sample,
             prompt=prompt_str,
             stream=stream,
         )

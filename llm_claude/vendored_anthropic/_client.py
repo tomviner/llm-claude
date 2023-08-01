@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import os
+import asyncio
 from typing import Union, Mapping, Optional
 
 import httpx
 from tokenizers import Tokenizer  # type: ignore[import]
 
-from . import resources
+from . import resources, _constants
 from ._qs import Querystring
 from ._types import (
     NOT_GIVEN,
@@ -52,6 +53,10 @@ class Anthropic(SyncAPIClient):
     api_key: str | None
     auth_token: str | None
 
+    # constants
+    HUMAN_PROMPT = _constants.HUMAN_PROMPT
+    AI_PROMPT = _constants.AI_PROMPT
+
     def __init__(
         self,
         *,
@@ -81,13 +86,17 @@ class Anthropic(SyncAPIClient):
         """Construct a new synchronous anthropic client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `auth_token` from `ANTHROPIC_AUTH_TOKEN`
         - `api_key` from `ANTHROPIC_API_KEY`
+        - `auth_token` from `ANTHROPIC_AUTH_TOKEN`
         """
-        api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+        api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", None)
+        self.api_key = api_key
+
+        auth_token_envvar = os.environ.get("ANTHROPIC_AUTH_TOKEN", None)
+        self.auth_token = auth_token or auth_token_envvar or None
 
         if base_url is None:
-            base_url = "https://api.anthropic.com"
+            base_url = f"https://api.anthropic.com"
 
         super().__init__(
             version=__version__,
@@ -101,11 +110,6 @@ class Anthropic(SyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
-
-        self.api_key = api_key
-
-        auth_token_envvar = os.environ.get("ANTHROPIC_AUTH_TOKEN", None)
-        self.auth_token = auth_token or auth_token_envvar or None
 
         self._default_stream_cls = Stream
 
@@ -216,6 +220,9 @@ class Anthropic(SyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
+    def __del__(self) -> None:
+        self.close()
+
     def count_tokens(
         self,
         text: str,
@@ -236,6 +243,10 @@ class AsyncAnthropic(AsyncAPIClient):
     # client options
     api_key: str | None
     auth_token: str | None
+
+    # constants
+    HUMAN_PROMPT = _constants.HUMAN_PROMPT
+    AI_PROMPT = _constants.AI_PROMPT
 
     def __init__(
         self,
@@ -266,13 +277,17 @@ class AsyncAnthropic(AsyncAPIClient):
         """Construct a new async anthropic client instance.
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `auth_token` from `ANTHROPIC_AUTH_TOKEN`
         - `api_key` from `ANTHROPIC_API_KEY`
+        - `auth_token` from `ANTHROPIC_AUTH_TOKEN`
         """
-        api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+        api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", None)
+        self.api_key = api_key
+
+        auth_token_envvar = os.environ.get("ANTHROPIC_AUTH_TOKEN", None)
+        self.auth_token = auth_token or auth_token_envvar or None
 
         if base_url is None:
-            base_url = "https://api.anthropic.com"
+            base_url = f"https://api.anthropic.com"
 
         super().__init__(
             version=__version__,
@@ -286,11 +301,6 @@ class AsyncAnthropic(AsyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
-
-        self.api_key = api_key
-
-        auth_token_envvar = os.environ.get("ANTHROPIC_AUTH_TOKEN", None)
-        self.auth_token = auth_token or auth_token_envvar or None
 
         self._default_stream_cls = AsyncStream
 
@@ -400,6 +410,12 @@ class AsyncAnthropic(AsyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
+
+    def __del__(self) -> None:
+        try:
+            asyncio.get_running_loop().create_task(self.close())
+        except Exception:
+            pass
 
     async def count_tokens(
         self,

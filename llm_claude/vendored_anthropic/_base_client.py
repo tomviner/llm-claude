@@ -5,6 +5,7 @@ import time
 import uuid
 import inspect
 import platform
+from types import TracebackType
 from random import random
 from typing import (
     Any,
@@ -679,6 +680,27 @@ class SyncAPIClient(BaseClient):
             headers={"Accept": "application/json"},
         )
 
+    def is_closed(self) -> bool:
+        return self._client.is_closed
+
+    def close(self) -> None:
+        """Close the underlying HTTPX client.
+
+        The client will *not* be usable after this.
+        """
+        self._client.close()
+
+    def __enter__(self: _T) -> _T:
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        self.close()
+
     @overload
     def request(
         self,
@@ -814,7 +836,7 @@ class SyncAPIClient(BaseClient):
         page: Type[SyncPageT],
         options: FinalRequestOptions,
     ) -> SyncPageT:
-        resp = cast(SyncPageT, self.request(page, options, stream=False))
+        resp = self.request(page, options, stream=False)
         resp._set_private_attributes(  # pyright: ignore[reportPrivateUsage]
             client=self,
             model=model,
@@ -935,7 +957,7 @@ class SyncAPIClient(BaseClient):
         options: RequestOptions = {},
     ) -> ResponseT:
         opts = FinalRequestOptions.construct(method="patch", url=path, json_data=body, **options)
-        return cast(ResponseT, self.request(cast_to, opts))
+        return self.request(cast_to, opts)
 
     def put(
         self,
@@ -947,7 +969,7 @@ class SyncAPIClient(BaseClient):
         options: RequestOptions = {},
     ) -> ResponseT:
         opts = FinalRequestOptions.construct(method="put", url=path, json_data=body, files=files, **options)
-        return cast(ResponseT, self.request(cast_to, opts))
+        return self.request(cast_to, opts)
 
     def delete(
         self,
@@ -958,7 +980,7 @@ class SyncAPIClient(BaseClient):
         options: RequestOptions = {},
     ) -> ResponseT:
         opts = FinalRequestOptions.construct(method="delete", url=path, json_data=body, **options)
-        return cast(ResponseT, self.request(cast_to, opts))
+        return self.request(cast_to, opts)
 
     def get_api_list(
         self,
@@ -1010,6 +1032,27 @@ class AsyncAPIClient(BaseClient):
             limits=limits,
             headers={"Accept": "application/json"},
         )
+
+    def is_closed(self) -> bool:
+        return self._client.is_closed
+
+    async def close(self) -> None:
+        """Close the underlying HTTPX client.
+
+        The client will *not* be usable after this.
+        """
+        await self._client.aclose()
+
+    async def __aenter__(self: _T) -> _T:
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        await self.close()
 
     @overload
     async def request(

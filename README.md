@@ -5,7 +5,7 @@
 [![Tests](https://github.com/tomviner/llm-claude/workflows/Test/badge.svg)](https://github.com/tomviner/llm-claude/actions?query=workflow%3ATest)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/tomviner/llm-claude/blob/main/LICENSE)
 
-Plugin for [LLM](https://llm.datasette.io/) adding support for Anthropic's Claude model.
+Plugin for [LLM](https://llm.datasette.io/) adding support for Anthropic's Claude models.
 
 ## Installation
 
@@ -36,7 +36,7 @@ Anthropic [describes them as](https://docs.anthropic.com/claude/reference/select
 > - **Claude Instant**: low-latency, high throughput
 > - **Claude**: superior performance on tasks that require complex reasoning
 
-You can execute them like this:
+You can query them like this:
 
 ```bash
 llm -m claude-instant "Ten great names for a new space station"

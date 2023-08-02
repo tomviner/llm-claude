@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: anthropic
-Version: 0.3.7
+Version: 0.3.8
 Summary: Client library for the anthropic API
 Home-page: https://github.com/anthropics/anthropic-sdk-python
 License: MIT

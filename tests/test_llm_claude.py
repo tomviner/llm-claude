@@ -3,12 +3,12 @@ from typing import List, Tuple
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
+from anthropic import AI_PROMPT, HUMAN_PROMPT
 from click.testing import CliRunner
 from llm import Prompt, Response, get_model
 from llm.cli import cli
 
 from llm_claude import Claude
-from llm_claude.vendored_anthropic import AI_PROMPT, HUMAN_PROMPT
 
 
 @patch("llm_claude.Anthropic")

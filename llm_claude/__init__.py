@@ -2,9 +2,8 @@ from typing import Optional
 
 import click
 import llm
+from anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 from pydantic import Field, field_validator
-
-from .vendored_anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 
 
 @llm.hookimpl

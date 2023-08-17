@@ -12,13 +12,7 @@ classifiers = [
 
 dependencies = [
     "llm",
-    # vendored anthropic:
-    "httpx >=0.23.0, <1",
-    "pydantic",
-    "typing-extensions >=4.1.1, <5",
-    "anyio >=3.5.0, <4",
-    "distro >=1.7.0, <2",
-    "tokenizers >=0.13.0",
+    "anthropic",
 ]
 
 requires-python = ">3.7"

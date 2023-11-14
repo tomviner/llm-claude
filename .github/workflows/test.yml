@@ -1,6 +1,11 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    # Runs every day at 00:00 UTC
+    - cron: '0 0 * * *'
 
 permissions:
   contents: read

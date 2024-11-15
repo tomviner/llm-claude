@@ -1,5 +1,11 @@
 # llm-claude
 
+# Depricated in favour of llm-claude-3
+
+Please see https://github.com/simonw/llm-claude-3/ instead
+
+---
+
 [![PyPI](https://img.shields.io/pypi/v/llm-claude.svg)](https://pypi.org/project/llm-claude/)
 [![Changelog](https://img.shields.io/github/v/release/tomviner/llm-claude?include_prereleases&label=changelog)](https://github.com/tomviner/llm-claude/releases)
 [![Tests](https://github.com/tomviner/llm-claude/workflows/Test/badge.svg)](https://github.com/tomviner/llm-claude/actions?query=workflow%3ATest)

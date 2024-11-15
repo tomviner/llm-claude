@@ -1,6 +1,6 @@
 # llm-claude
 
-# Depricated in favour of llm-claude-3
+# Deprecated in favour of llm-claude-3
 
 Please see https://github.com/simonw/llm-claude-3/ instead
 

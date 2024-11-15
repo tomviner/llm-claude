@@ -1,6 +1,6 @@
 [project]
 name = "llm-claude"
-version = "0.4.1"
+version = "0.4.2"
 
 description = "LLM plugin for Anthropic's Claude"
 readme = "README.md"
